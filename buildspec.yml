@@ -1,12 +1,15 @@
-ersion: 0.2
+version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      docker: 19
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=555.dkr.ecr.us-east-1.amazonaws.com/name
+      - REPOSITORY_URI=889385213410.dkr.ecr.us-east-1.amazonaws.com/bbbcdemo
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
@@ -22,7 +25,6 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"name","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"bbbcdemo","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
-    files:
-      - imagedefinitions.json
+    files: imagedefinitions.json
